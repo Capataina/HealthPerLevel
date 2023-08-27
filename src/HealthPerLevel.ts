@@ -17,9 +17,25 @@ import { LogBackgroundColor } from "@spt-aki/models/spt/logging/LogBackgroundCol
 import https from "https";
 
 class HealthPerLevel implements IPreAkiLoadMod, IPostDBLoadMod {
-  private multiplierPmc: number = 12; //Amount of health per bodypart on level up for pmc's
-  private multiplierScav: number = 20; //Amount of health per bodypart on level up for scav's
+  private Parts: { [key: string] : number; } = {
+    "Chest" : 2,
+    "Head" : 2,
+    "LeftArm" : 3,
+    "LeftLeg" : 3,
+    "RightArm" : 3,
+    "RightLeg" : 3,
+    "Stomach" : 2
+  };
 
+  private RealismPlus: { [key:string] : number; } = {
+    "Chest" : 110,
+    "Head" : 30,
+    "LeftArm" : 50,
+    "LeftLeg" : 70,
+    "RightArm" : 50,
+    "RightLeg" : 70,
+    "Stomach" : 90,
+  };
   private GlobalBodyParts: BodyPartsSettings;
   private PMCBodyParts: BodyPartsHealth;
   private SCAVBodyParts: BodyPartsHealth;
@@ -56,8 +72,8 @@ class HealthPerLevel implements IPreAkiLoadMod, IPostDBLoadMod {
                 pHelp.getScavProfile(sessionID).Health.BodyParts;
               this.SCAVLevel = pHelp.getScavProfile(sessionID).Info.Level;
 
-              this.calcPMCHealth(this.PMCBodyParts, this.PMCLevel);
-              this.calcSCAVHealth(this.SCAVBodyParts, this.SCAVLevel);
+              this.calcPMCHealth(this.PMCBodyParts, this.PMCLevel, this.RealismPlus);
+              this.calcSCAVHealth(this.SCAVBodyParts, this.SCAVLevel, this.RealismPlus);
             } catch (error) {
               this.logger.error(error.message);
             }
@@ -76,8 +92,8 @@ class HealthPerLevel implements IPreAkiLoadMod, IPostDBLoadMod {
                 pHelp.getScavProfile(sessionID).Health.BodyParts;
               this.SCAVLevel = pHelp.getScavProfile(sessionID).Info.Level;
 
-              this.calcPMCHealth(this.PMCBodyParts, this.PMCLevel);
-              this.calcSCAVHealth(this.SCAVBodyParts, this.SCAVLevel);
+              this.calcPMCHealth(this.PMCBodyParts, this.PMCLevel, this.RealismPlus);
+              this.calcSCAVHealth(this.SCAVBodyParts, this.SCAVLevel, this.RealismPlus);
             } catch (error) {
               this.logger.error(error.message);
             }
@@ -89,23 +105,23 @@ class HealthPerLevel implements IPreAkiLoadMod, IPostDBLoadMod {
     );
   }
 
-  private calcPMCHealth(bodyPart: BodyPartsHealth, accountLevel: number) {
-    for (let eachPart in bodyPart) {
-      bodyPart[eachPart].Health.Maximum =
-        this.GlobalBodyParts[eachPart].Default +
-        (accountLevel - 1) * this.multiplierPmc;
+  private calcPMCHealth(bodyPart: BodyPartsHealth, accountLevel: number, preset) {
+    for (let key in this.Parts) {
+      bodyPart[key].Health.Maximum =
+        preset[key] + (accountLevel - 1) * this.Parts[key];
     }
   }
 
-  private calcSCAVHealth(bodyPart: BodyPartsHealth, accountLevel: number) {
-    for (let eachPart in bodyPart) {
-      bodyPart[eachPart].Health.Maximum =
-        this.GlobalBodyParts[eachPart].Default +
-        (accountLevel - 1) * this.multiplierScav;
-      bodyPart[eachPart].Health.Current =
-        this.GlobalBodyParts[eachPart].Default +
-        (accountLevel - 1) * this.multiplierScav;
+  private calcSCAVHealth(bodyPart: BodyPartsHealth, accountLevel: number, preset) {
+    for (let key in this.Parts) {
+      bodyPart[key].Health.Maximum =
+        preset[key] + (accountLevel - 1) * this.Parts[key];
+    }
+    for (let key in this.Parts) {
+      bodyPart[key].Health.Current =
+        preset[key] + (accountLevel - 1) * this.Parts[key];
     }
   }
 }
+
 module.exports = { mod: new HealthPerLevel() };
