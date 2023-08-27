@@ -4,38 +4,33 @@ import { IPostDBLoadMod } from "@spt-aki/models/external/IPostDBLoadMod";
 import { DatabaseServer } from "@spt-aki/servers/DatabaseServer";
 import { StaticRouterModService } from "@spt-aki/services/mod/staticRouter/StaticRouterModService";
 import { ProfileHelper } from "@spt-aki/helpers/ProfileHelper";
-import {
-  BodyPartsSettings,
-  Effects,
-} from "@spt-aki/models/eft/common/IGlobals";
+import { BodyPartsSettings } from "@spt-aki/models/eft/common/IGlobals";
 import { BodyPartsHealth } from "@spt-aki/models/eft/common/tables/IBotBase";
-import { VFS } from "@spt-aki/utils/VFS";
-import { JsonUtil } from "@spt-aki/utils/JsonUtil";
 import { ILogger } from "@spt-aki/models/spt/utils/ILogger";
-import { LogTextColor } from "@spt-aki/models/spt/logging/LogTextColor";
-import { LogBackgroundColor } from "@spt-aki/models/spt/logging/LogBackgroundColor";
-import https from "https";
 
 class HealthPerLevel implements IPreAkiLoadMod, IPostDBLoadMod {
-  private Parts: { [key: string] : number; } = {
-    "Chest" : 2,
-    "Head" : 2,
-    "LeftArm" : 3,
-    "LeftLeg" : 3,
-    "RightArm" : 3,
-    "RightLeg" : 3,
-    "Stomach" : 2
+  private IncreasePerLevel: { [key: string]: number } = {
+    //Change the numbers here to change the increase in health per level.
+    Chest: 2,
+    Head: 2,
+    LeftArm: 3,
+    LeftLeg: 3,
+    RightArm: 3,
+    RightLeg: 3,
+    Stomach: 2,
   };
 
-  private RealismPlus: { [key:string] : number; } = {
-    "Chest" : 110,
-    "Head" : 30,
-    "LeftArm" : 50,
-    "LeftLeg" : 70,
-    "RightArm" : 50,
-    "RightLeg" : 70,
-    "Stomach" : 90,
+  private BaseHealth: { [key: string]: number } = {
+    //Change the numbers here to set the base health per body part.
+    Chest: 85,
+    Head: 35,
+    LeftArm: 60,
+    LeftLeg: 65,
+    RightArm: 60,
+    RightLeg: 65,
+    Stomach: 70,
   };
+
   private GlobalBodyParts: BodyPartsSettings;
   private PMCBodyParts: BodyPartsHealth;
   private SCAVBodyParts: BodyPartsHealth;
@@ -72,8 +67,16 @@ class HealthPerLevel implements IPreAkiLoadMod, IPostDBLoadMod {
                 pHelp.getScavProfile(sessionID).Health.BodyParts;
               this.SCAVLevel = pHelp.getScavProfile(sessionID).Info.Level;
 
-              this.calcPMCHealth(this.PMCBodyParts, this.PMCLevel, this.RealismPlus);
-              this.calcSCAVHealth(this.SCAVBodyParts, this.SCAVLevel, this.RealismPlus);
+              this.calcPMCHealth(
+                this.PMCBodyParts,
+                this.PMCLevel,
+                this.BaseHealth
+              );
+              this.calcSCAVHealth(
+                this.SCAVBodyParts,
+                this.SCAVLevel,
+                this.BaseHealth
+              );
             } catch (error) {
               this.logger.error(error.message);
             }
@@ -92,8 +95,16 @@ class HealthPerLevel implements IPreAkiLoadMod, IPostDBLoadMod {
                 pHelp.getScavProfile(sessionID).Health.BodyParts;
               this.SCAVLevel = pHelp.getScavProfile(sessionID).Info.Level;
 
-              this.calcPMCHealth(this.PMCBodyParts, this.PMCLevel, this.RealismPlus);
-              this.calcSCAVHealth(this.SCAVBodyParts, this.SCAVLevel, this.RealismPlus);
+              this.calcPMCHealth(
+                this.PMCBodyParts,
+                this.PMCLevel,
+                this.BaseHealth
+              );
+              this.calcSCAVHealth(
+                this.SCAVBodyParts,
+                this.SCAVLevel,
+                this.BaseHealth
+              );
             } catch (error) {
               this.logger.error(error.message);
             }
@@ -105,21 +116,29 @@ class HealthPerLevel implements IPreAkiLoadMod, IPostDBLoadMod {
     );
   }
 
-  private calcPMCHealth(bodyPart: BodyPartsHealth, accountLevel: number, preset) {
-    for (let key in this.Parts) {
+  private calcPMCHealth(
+    bodyPart: BodyPartsHealth,
+    accountLevel: number,
+    preset
+  ) {
+    for (let key in this.IncreasePerLevel) {
       bodyPart[key].Health.Maximum =
-        preset[key] + (accountLevel - 1) * this.Parts[key];
+        preset[key] + (accountLevel - 1) * this.IncreasePerLevel[key];
     }
   }
 
-  private calcSCAVHealth(bodyPart: BodyPartsHealth, accountLevel: number, preset) {
-    for (let key in this.Parts) {
+  private calcSCAVHealth(
+    bodyPart: BodyPartsHealth,
+    accountLevel: number,
+    preset
+  ) {
+    for (let key in this.IncreasePerLevel) {
       bodyPart[key].Health.Maximum =
-        preset[key] + (accountLevel - 1) * this.Parts[key];
+        preset[key] + (accountLevel - 1) * this.IncreasePerLevel[key];
     }
-    for (let key in this.Parts) {
+    for (let key in this.IncreasePerLevel) {
       bodyPart[key].Health.Current =
-        preset[key] + (accountLevel - 1) * this.Parts[key];
+        preset[key] + (accountLevel - 1) * this.IncreasePerLevel[key];
     }
   }
 }
