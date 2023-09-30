@@ -1,9 +1,9 @@
 {
-  "name": "HealthPerLevel",
-  "version": "1.1.0",
-  "main": "src/HealthPerLevel.js",
+  "name": "HealthPerSkills",
+  "version": "1.2.0",
+  "main": "src/HealthPerSkills.js",
   "license": "MIT",
-  "author": "Capataina",
+  "author": "Capataina - PanzerKadaver",
   "akiVersion": "^3.6.x",
   "scripts": {
     "setup": "npm i",
