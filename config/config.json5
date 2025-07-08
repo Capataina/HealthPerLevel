@@ -1,0 +1,161 @@
+{
+    enabled: true,
+
+    // ---If this is false just use the _PMC values for both scav and PMC---
+    split_scav_and_PMC_health : false,
+
+    // These options allow you to decide if you want to keep bleeding and fractures threshold at more or less consistent level
+    keep_bleeding_chance_consistant: true,
+    increase_threshold_every_increment: true,
+
+    show_realism_warning: true,
+
+    ALT:
+    {
+        alt_enabled: false,
+        head_boost: 3.0,
+        alt_base_health:
+        {
+            thorax:  90,
+            stomach: 90,
+            head:    30,
+            l_arm:   60,
+            l_leg:   75,
+            r_arm:   60,
+            r_leg:   75
+        },
+        levels_per_partial_inc:
+        {
+            thorax:  7,
+            stomach: 5,
+            head:    7,
+            l_arm:   3,
+            l_leg:   5,
+            r_arm:   3,
+            r_leg:   5
+        },
+        partial_inc_per_level:
+        {
+            thorax:  7,
+            stomach: 7,
+            head:    5,
+            l_arm:   3,
+            l_leg:   5,
+            r_arm:   3,
+            r_leg:   5
+        },
+        partial_mul_per_skill:
+        {
+            // permille
+            thorax: 13.37, // 90(base) * 0.01337 * 50 * 2.0(elite) ~= +120
+            stomach: 8.34, // 90(base) * 0.00834 * 50 * 2.0(elite) ~= +75
+            head: 10.0, // 30(base) * 0.01 * 50 * 2.0(elite) = +30 AND * 3.0(head_boost) = +90
+            l_arm: 7.57, // 60(base) * 0.00757 * 50 * 2.0(elite) ~= +45
+            l_leg: 8.0, // 75(base) * 0.008 * 50 * 2.0(elite) = +60
+            r_arm: 7.57,
+            r_leg: 8.0
+        }
+    },
+
+    PMC:
+    {
+        // How many levels does the playerPMC have to level up by before the code changes their health values
+        levels_per_increment: 5,
+        level_cap: false,
+        level_cap_value: 30,
+        health_skill_levels_per_increment: 1,
+        level_health_skill_cap: false,
+        level_health_skill_cap_value: 25,
+
+        // The following lines are for changing the base health values for the playerPMC, the default values are for default EFT
+        base_health:
+        {
+            thorax_base_health: 85,
+            stomach_base_health: 70,
+            head_base_health: 35,
+            left_arm_base_health: 60,
+            right_arm_base_health: 60,
+            left_leg_base_health: 65,
+            right_leg_base_health:65
+        },
+        // The following lines are for changing the amount of health increased per increment for PMC/ALL
+        increase_per_level:
+        {
+            thorax_health_per_level: 2,
+            stomach_health_per_level: 2,
+            head_health_per_level: 2,
+            left_arm_per_level: 3,
+            right_arm_per_level: 3,
+            left_leg_per_level: 3,
+            right_leg_per_level: 3
+        },
+        // The following lines are for changing the amount of health increased per increment of Health skill for PMC/ALL
+        health_per_health_skill_level: true,
+        increase_per_health_skill_level:
+        {
+            health_skill_thorax_health_per_level: 1,
+            health_skill_stomach_health_per_level: 1,
+            health_skill_head_health_per_level: 1,
+            health_skill_left_arm_per_level: 1,
+            health_skill_right_arm_per_level: 1,
+            health_skill_left_leg_per_level: 1,
+            health_skill_right_leg_per_level: 1
+        }
+    },
+    // ALL of the follwing lines are only neccessary if split_scav_and_PMC_health is set to TRUE
+    SCAV:
+    {
+        // How many levels does the playerscav have to level up by before the code changes their health values
+        levels_per_increment: 5,
+        level_cap: false,
+        level_cap_value: 30,
+        health_skill_levels_per_increment: 1,
+        level_health_skill_cap: false,
+        level_health_skill_cap_value: 25,
+
+        // The following lines are for changing the base health values for the playerscav, the default values are for default EFT
+        base_health:
+        {
+            thorax_base_health: 85,
+            stomach_base_health: 70,
+            head_base_health: 35,
+            left_arm_base_health: 60,
+            right_arm_base_health: 60,
+            left_leg_base_health: 65,
+            right_leg_base_health:65
+        },
+        // The following lines are for changing the amount of health increased per increment for SCAV ONLY
+        increase_per_level:
+        {
+            thorax_health_per_level: 2,
+            stomach_health_per_level: 2,
+            head_health_per_level: 2,
+            left_arm_per_level: 3,
+            right_arm_per_level: 3,
+            left_leg_per_level: 3,
+            right_leg_per_level: 3
+        },
+        // The following lines are for changing the amount of health increased per increment of Health Skill for SCAV ONLY
+        health_per_health_skill_level: true,
+        increase_per_health_skill_level:
+        {
+            health_skill_thorax_health_per_level: 1,
+            health_skill_stomach_health_per_level: 1,
+            health_skill_head_health_per_level: 1,
+            health_skill_left_arm_per_level: 1,
+            health_skill_right_arm_per_level: 1,
+            health_skill_left_leg_per_level: 1,
+            health_skill_right_leg_per_level: 1
+        }
+    },
+    // Below section enables changes of BOT health changes with factions for better adjustment
+    AI:
+    {
+        enabled: true,
+        pmc_bot_health: true,
+        scav_bot_health: false,
+        raider_bot_health: false,
+        boss_bot_health: false,
+        follower_bot_health: false
+    }
+}
